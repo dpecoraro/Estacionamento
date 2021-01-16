@@ -1,0 +1,118 @@
+﻿@page "/funcionarios"
+@using Microsoft.AspNetCore.Authorization
+@attribute [Authorize]
+
+<style>
+    .content {
+        margin-left: 18.2px !important;
+    }
+
+    #employee-parking-title {
+        text-align: center;
+        font-size: 1.3em;
+        padding-bottom: 5px;
+    }
+
+    #employee-parking-subtitle {
+        text-align: center;
+        font-size: 0.90em;
+        font-weight: 500;
+        color: rgb(94, 94, 94);
+        padding-bottom: 15px;
+    }
+
+    .btn-primary {
+        height: 36px;
+    }
+
+    .btn-light {
+        height: 37px;
+    }
+
+    .btn-success {
+        height: 36px;
+    }
+
+    .btn-info {
+        width: 60px;
+        height: 30px;
+    }
+
+    .btn-danger {
+        width: 60px;
+        height: 30px;
+    }
+
+    .alert-danger {
+        width: 500px;
+    }
+
+    .employee-fetch-help-text {
+        text-align: center;
+        font-size: 1.3em;
+        font-weight: 500;
+        color: black;
+        padding-top: 100px;
+    }
+</style>
+
+<br />
+<h3 id="employee-parking-title">Funcionários</h3>
+<p id="employee-parking-subtitle">Listagem de Funcionários</p>
+
+<div class="form-group">
+    <a class="btn btn-primary" href="/" title="Voltar"><i class="oi oi-home"></i></a>
+    <a class="btn btn-light" @onclick="@(() => OnInitializedAsync())" title="Recarregar"><i class="oi oi-reload"></i></a>
+    <a class="btn btn-success" href="funcionarios/create" title="Novo"><i class="oi oi-plus"></i></a>
+</div>
+
+@if (Funcionarios == null)
+{
+    <p class="employee-fetch-help-text">Carregando...</p>
+}
+else if (Funcionarios.Count() == 0)
+{
+    <p class="employee-fetch-help-text">Nenhum Registro Encontrado.</p>
+}
+else
+{
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Nome</th>
+                <th>CPF</th>
+                <th>Cargo</th>
+                <th>Estacionamento</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (FuncionarioDTO funci in Funcionarios)
+            {
+                <tr>
+                    <td>@funci.Id</td>
+                    <td>@funci.Nome</td>
+                    <td>@funci.CPF</td>
+                    <td>@funci.CargoDescricao</td>
+                    <td>@funci.EstacionamentoUnidade</td>
+                    <td>
+                        <a class="btn btn-info btn-sm" href="funcionarios/edit/@funci.Id" title="Editar"><i class="oi oi-pencil"></i></a>
+                        <button class="btn btn-danger btn-sm" @onclick="@(() => Delete(funci.Id))" title="Excluir"><i class="oi oi-trash"></i></button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+<br />
+<br />
+<br />
+@if (!string.IsNullOrEmpty(ErrorMessage))
+{
+    <div class="alert alert-danger alert-dismissible">
+        <button type="button" class="close" data-dismiss="alert" @onclick="@(() => ErrorMessage = string.Empty)">×</button>
+        <strong>Erro!</strong> @ErrorMessage
+    </div>
+}

@@ -1,0 +1,212 @@
+﻿@page "/"
+@using Microsoft.AspNetCore.Authorization
+@attribute [Authorize]
+
+<AuthorizeView>
+    <NotAuthorized>
+        <MatAppBarContainer>
+            <MatAppBar Fixed="true">
+                <MatAppBarRow>
+                    <MatAppBarSection>
+                        <MatIconButton OnClick="@MenuClick" RefBack="@buttonForwardRef" Icon="menu"></MatIconButton>
+                        <p>
+                            <MatMenu @ref="Menu" TargetForwardRef="@buttonForwardRef">
+                                <MatList>
+                                    <MatListItem Href="login">
+                                        <MatIcon Icon="account_circle"></MatIcon>&nbsp;&nbsp;Login
+                                    </MatListItem>
+                                </MatList>
+                            </MatMenu>
+                        </p>
+                        <div class="top-bar-title">
+                            <MatAppBarTitle Class="top-title">Sistema de Controle de Estacionamentos Greenville Control</MatAppBarTitle>
+                        </div>
+                    </MatAppBarSection>
+                </MatAppBarRow>
+            </MatAppBar>
+        </MatAppBarContainer>
+    </NotAuthorized>
+
+    <Authorized>
+        <MatAppBarContainer>
+            <MatAppBar Fixed="true">
+                <MatAppBarRow>
+                    <MatAppBarSection>
+                        <MatIconButton OnClick="@MenuClick" RefBack="@buttonForwardRef" Icon="menu"></MatIconButton>
+                        <p>
+                            <MatMenu @ref="Menu" TargetForwardRef="@buttonForwardRef">
+                                <MatList>
+                                    <MatListItem Href="">
+                                        <MatIcon Icon="home"></MatIcon>&nbsp;&nbsp;Home
+                                    </MatListItem>
+                                    <MatDivider></MatDivider>
+                                    <MatListItem Href="/relatorios/veiculosMensalistas">
+                                        <MatIcon Icon="time_to_leave"></MatIcon>&nbsp;&nbsp;Relatório - Veículos Mensalistas
+                                    </MatListItem>
+                                    <MatListItem Href="/relatorios/vagasPorEstacionamento">
+                                        <MatIcon Icon="list"></MatIcon>&nbsp;&nbsp;Relatório - Vagas por Estacionamento
+                                    </MatListItem>
+                                    <MatListItem Href="/relatorios/movimentacaoVeiculoPeriodo">
+                                        <MatIcon Icon="compare_arrows"></MatIcon>&nbsp;&nbsp;Relatório - Movimentação de Veículo por Período
+                                    </MatListItem>
+                                    <MatListItem Href="/relatorios/usoHorarioEstacionamento">
+                                        <MatIcon Icon="timeline"></MatIcon>&nbsp;&nbsp;Relatório - Uso/Horário por Estacionamento
+                                    </MatListItem>
+                                    <MatDivider></MatDivider>
+                                    <MatListItem Href="logout">
+                                        <MatIcon Icon="cancel_presentation"></MatIcon>&nbsp;&nbsp;Sair
+                                    </MatListItem>
+                                </MatList>
+                            </MatMenu>
+                        </p>
+                        <div class="top-bar-title">
+                            <MatAppBarTitle Class="top-title">Sistema de Controle de Estacionamentos Greenville Control</MatAppBarTitle>
+                        </div>
+                    </MatAppBarSection>
+                </MatAppBarRow>
+            </MatAppBar>
+        </MatAppBarContainer>
+        <br />
+        <br />
+        <br />
+        <br />
+
+        <div id="main-dashboard">
+            <div id="first-column">
+                <div class="first-column-items-priority">
+                    <div class="container ctn-dash">
+                        <MatButton Link="/recebimento" Raised="true" Class="btn-dash-primary">Recebimento de Veículos</MatButton>
+                    </div>
+
+                    <div class="container ctn-dash">
+                        <MatButton Link="/alocacoes" Raised="true" Class="btn-dash-primary">Retirada de Veículos</MatButton>
+                    </div>
+                </div>
+
+                <div class="first-column-items">
+                    <div class="container ctn-dash">
+                        <MatButton Link="/clientes" Raised="true" Class="btn-dash-secondary">Clientes</MatButton>
+                    </div>
+
+                    <div class="container ctn-dash">
+                        <MatButton Link="/veiculos" Raised="true" Class="btn-dash-secondary">Veículos</MatButton>
+                    </div>
+                    <div class="container ctn-dash">
+                        <MatButton Link="/realocacao" Raised="true" Class="btn-dash-secondary">Realocação</MatButton>
+                    </div>
+                </div>
+            </div>
+
+
+            <div id="second-column">
+                <div class="container ctn-dash">
+                    <MatButton Style="background-color: #007ABF;" Link="/estacionamentos" Raised="true" Class="btn-dash-middle">Estacionamentos</MatButton>
+                </div>
+
+                <div class="container ctn-dash">
+                    <MatButton Style="background-color: #007ABF;" Link="/vagas" Raised="true" Class="btn-dash-middle">Vagas</MatButton>
+                </div>
+
+                <div class="container ctn-dash">
+                    <MatButton Style="background-color: #007ABF;" Link="/funcionarios" Raised="true" Class="btn-dash-middle">Funcionários</MatButton>
+                </div>
+
+                <div class="container ctn-dash">
+                    <MatButton Style="background-color: #007ABF;" Link="/usuarios" Raised="true" Class="btn-dash-middle">Usuários</MatButton>
+                </div>
+            </div>
+        </div>
+    </Authorized>
+</AuthorizeView>
+
+@code
+    {
+    ForwardRef buttonForwardRef = new ForwardRef();
+    BaseMatMenu Menu;
+
+    public void MenuClick(MouseEventArgs e)
+    {
+        this.Menu.OpenAsync();
+    }
+}
+
+<style>
+
+    .top-row {
+        display: none !important;
+    }
+
+    .top-bar-title {
+        display: flex;
+        justify-content: center;
+        width: 100%;
+    }
+
+    .top-title{
+       font-size: 1.15em;
+       font-weight: 400;
+
+    }
+
+    .content {
+        padding-top: 0 !important;
+    }
+
+    #main-dashboard {
+        display: flex;
+        justify-content: center;
+        margin-top: 4%;
+    }
+
+    #first-column {
+        display: flex;
+        flex-direction: column;
+        justify-content:space-between;
+        height: 400px;
+    }
+
+    .first-column-items-priority{
+        display: flex;
+       
+    }
+
+    .first-column-items {
+        display: flex;
+    }
+
+    #second-column{
+        display:flex;
+        flex-direction: column;
+        justify-content: space-between;
+        padding-left: 40px;
+
+    }
+
+    .btn-dash-primary {
+        width: 13rem;
+        height: 10rem;
+    }
+
+    .col-md-6 {
+        display: block;
+    }
+
+    .btn-dash-middle {
+        width: 182px;
+        height: 4rem;
+    }
+
+    .btn-dash-secondary {
+        width: 8rem;
+        height: 10rem;
+    }
+
+    .ctn-dash {
+        padding: 1rem 1rem 1rem 1rem;
+    }
+
+    .MatAppBarContainer {
+    }
+</style>
+
+

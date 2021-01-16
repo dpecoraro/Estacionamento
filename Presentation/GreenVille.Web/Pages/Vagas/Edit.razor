@@ -1,0 +1,41 @@
+﻿@page "/vagas/edit/{vagaId:int}"
+@using Microsoft.AspNetCore.Authorization
+@inject NavigationManager uriHelper
+@attribute [Authorize]
+
+<style>
+
+    .content {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    #vaga-title
+    {
+        text-align: center;
+        font-size: 1.3em;
+        padding-bottom: 5px;
+    }
+
+    #vaga-subtitle
+    {
+        text-align: center;
+        font-size: 0.90em;
+        font-weight: 500;
+        color: rgb(94, 94, 94);
+        padding-bottom: 15px;
+    }
+
+</style>
+
+
+<div id="main-vaga-create">
+    <div>
+        <h2 id="vaga-title">Editar Vaga</h2>
+        <p id="vaga-subtitle">Informe os dados abaixo para editar a vaga</p>
+    </div>
+    <div>
+        <FormVaga vaga="@vaga" OnValidSubmit="@EditVaga" ErrorMessage="@ErrorMessage" />
+    </div>
+</div>

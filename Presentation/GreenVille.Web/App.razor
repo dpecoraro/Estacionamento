@@ -1,0 +1,28 @@
+﻿<Router AppAssembly="@typeof(Program).Assembly">
+    <Found Context="routeData">
+        <AuthorizeRouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)">
+            <Authorizing>
+                <p>Por favor aguarde, autenticando o usuário.</p>
+            </Authorizing>
+            <NotAuthorized>
+                <p>Acesso negado. Por favor faça o login na aplicação.</p>
+                <div>
+                    <NavLink class="nav-link" href="login">
+                        <span class="oi" aria-hidden="true"></span> Login
+                    </NavLink>
+                </div>
+                <RedirectToLogin />
+            </NotAuthorized>
+        </AuthorizeRouteView>
+    </Found>
+    <NotFound>
+        <CascadingAuthenticationState>
+            <LayoutView Layout="@typeof(MainLayout)">
+                <p>Página não encontrada.</p>
+                <NavLink class="nav-link" href="">
+                    <span class="oi oi-home" aria-hidden="true"></span> Home
+                </NavLink>
+            </LayoutView>
+        </CascadingAuthenticationState>
+    </NotFound>
+</Router>

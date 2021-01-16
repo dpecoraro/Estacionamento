@@ -1,0 +1,41 @@
+﻿@page "/funcionarios/create"
+@using Microsoft.AspNetCore.Authorization
+@inject NavigationManager uriHelper
+@attribute [Authorize]
+
+<style>
+
+    .content {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    #funcionario-title
+    {
+        text-align: center;
+        font-size: 1.3em;
+        padding-bottom: 5px;
+    }
+
+    #funcionario-subtitle
+    {
+        text-align: center;
+        font-size: 0.90em;
+        font-weight: 500;
+        color: rgb(94, 94, 94);
+        padding-bottom: 15px;
+    }
+
+</style>
+
+
+<div id="main-funcionario-create">
+    <div>
+        <h2 id="funcionario-title">Cadastrar Funcionário</h2>
+        <p id="funcionario-subtitle">Informe os dados abaixo para cadastrar o funcionário</p>
+    </div>
+    <div>
+        <FormFuncionario funci="@funci" OnValidSubmit="@CreateFuncioario" ErrorMessage="@ErrorMessage" />
+    </div>
+</div>

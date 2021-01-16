@@ -1,0 +1,187 @@
+﻿@page "/alocacoes"
+@using Microsoft.AspNetCore.Authorization
+@attribute [Authorize]
+
+<style>
+
+    .content {
+        margin-left: 18.2px !important;
+    }
+
+    #nav-removal {
+        display: flex;
+        justify-content: center;
+    }
+
+    #main-removal {
+        display: flex;
+        flex-direction: column;
+        width: 450px;
+    }
+
+    #removal-title {
+        text-align: center;
+        font-size: 1.3em;
+        padding-bottom: 5px;
+    }
+
+    #removal-subtittle {
+        text-align: center;
+        font-size: 0.90em;
+        font-weight: 500;
+        color: rgb(94, 94, 94);
+        padding-bottom: 15px;
+    }
+
+    .form-control {
+        width: 260px;
+        height: 45px;
+        margin: 8px 0;
+        padding: 8px;
+        transition: .3s;
+    }
+
+    .return-update-select {
+        display: flex;
+        justify-content: space-between;
+        width: 450px;
+        align-items: center;
+    }
+
+    .return-update {
+        display: flex;
+        justify-content: space-between;
+        width: 90px;
+    }
+
+    .btn-primary {
+        height: 36px;
+    }
+
+    .btn-light {
+        height: 37px;
+    }
+
+    .btn-info {
+        width: 60px;
+        height: 30px;
+    }
+
+    .remove-help-text {
+        text-align: center;
+        font-size: 1.3em;
+        font-weight: 500;
+        color: black;
+        padding-top: 10%;
+    }
+
+    .alert-danger {
+        width: 100%;  
+    }
+
+</style>
+
+<div id="nav-removal">
+
+    <div id="main-removal">
+
+        <div>
+            <h3 id="removal-title">Retirada de Veículos</h3>
+        </div>
+        <div>
+            <p id="removal-subtittle">Escolha o estacionamento e selecione o veículo para retirada</p>
+        </div>
+
+        <div>
+
+            <EditForm model="@_alocacoesForm" OnValidSubmit="GetAlocacoes">
+                <div class="return-update-select">
+                    <div class="return-update">
+                        <div>
+                            <a class="btn btn-primary" href="/" title="Voltar"><i class="oi oi-home"></i></a>
+                        </div>
+
+                        <div>
+                            <a class="btn btn-light" @onclick="@(() => GetAlocacoes())" title="Recarregar"><i class="oi oi-reload"></i> </a>
+                        </div>
+                    </div>
+
+                    <div>
+                        <InputSelectNumber class="form-control" Value="@_estacionamentoId" ValueExpression="@(() => _estacionamentoId)"
+                                ValueChanged="@((int value) => EstacionamentoList_Change(value))">
+                            @if (ListagemEstacionamentos == null)
+                            {
+                                <option value="">-- Carregando --</option>
+                            }
+                            else
+                            {
+                                <option value="">-- Escolha o Estacionamento --</option>
+                                @if (ListagemEstacionamentos != null)
+                                {
+                                    @foreach (var estacionamento in ListagemEstacionamentos)
+                                    {
+                                        <option value="@estacionamento.Id">@estacionamento.NomeUnidade</option>
+                                    }
+                                }
+                            }
+                        </InputSelectNumber>
+                    </div>
+                </div>
+            </EditForm>
+        </div>
+    </div>
+</div>
+
+
+@if (Alocacoes == null)
+{
+    <p class="remove-help-text">Selecione um Estacionamento.</p>
+}
+else if (Alocacoes.Count() == 0)
+{
+    <p class="remove-help-text">Nenhum Veículo Alocado no Estacionamento.</p>
+}
+else
+{ 
+    <hr />
+    <br />
+    <small>Listagem de Veículos no Estacionamento:</small>
+    <br />
+  
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Vaga</th>
+                <th>Veículo Placa</th>
+                <th>Entrada</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (VeiculoAlocadoDTO aloc in Alocacoes)
+            {
+                <tr>
+                    <td>@aloc.Id</td>
+                    <td>@aloc.VagaNome</td>
+                    <td>@aloc.VeiculoPlaca</td>
+                    <td>@aloc.Entrada</td>
+                    <td>
+                        <a class="btn btn-info btn-sm" href="/alocacoes/retirar/@aloc.Id" title="Retirar Veículo"><i class="oi oi-arrow-thick-right"></i></a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+<br />
+<br />
+<br />
+@if (!string.IsNullOrEmpty(ErrorMessage))
+{
+    <div class="alert alert-danger alert-dismissible">
+        <button type="button" class="close" data-dismiss="alert" @onclick="@(() => ErrorMessage = string.Empty)">×</button>
+        <strong>Erro!</strong> @ErrorMessage
+    </div>
+}

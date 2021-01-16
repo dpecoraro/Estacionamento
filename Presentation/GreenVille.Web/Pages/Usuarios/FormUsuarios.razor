@@ -1,0 +1,153 @@
+﻿<style>
+
+    .content {
+        display: flex;
+        justify-content: center;
+    }
+
+    .label-input-text {
+        font-size: 0.7500em;
+        font-weight: 600;
+    }
+
+    .form-control {
+        width: 500px;
+        height: 45px;
+        margin: 8px 0;
+        padding: 8px;
+        transition: .3s;
+    }
+
+    .validation-message {
+        width: 450px;
+    }
+
+    #signup-or-cancel-area {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 30px;
+    }
+
+    .btn-success {
+        width: 100px;
+        height: 35px;
+        background-color: #19B95F;
+        color: white;
+        font-size: 0.7500em;
+    }
+
+    .btn-success:hover {
+        background-color: #18AD5A;
+    }
+
+    .btn-danger {
+        width: 100px;
+        height: 35px;
+        font-size: 0.7500em;
+    }
+
+    .alert-danger {
+        width: 500px;
+    }
+
+</style>
+
+
+<EditForm Model="@usuario" OnValidSubmit="@OnValidSubmit">
+    <DataAnnotationsValidator />
+
+    <div id="main-usuario-form">
+
+        <div class="form-group">
+            <label class="label-input-text">Nome *</label>
+            <div>
+                <InputText class="form-control" @bind-Value="@usuario.Nome" />
+                <ValidationMessage class="validation-message" For="@(() => usuario.Nome)" />
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="label-input-text">E-mail *</label>
+            <div>
+                <InputText class="form-control" @bind-Value="@usuario.Email" />
+                <ValidationMessage class="validation-message" For="@(() => usuario.Email)" />
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="label-input-text">Confirmação de E-mail *</label>
+            <div>
+                <InputText class="form-control" @bind-Value="@usuario.EmailConfirmation" />
+                <ValidationMessage class="validation-message" For="@(() => usuario.EmailConfirmation)" />
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="label-input-text">Senha *</label>
+            <div>
+                <InputText class="form-control" @bind-Value="@usuario.Senha" type="password" />
+                <ValidationMessage class="validation-message" For="@(() => usuario.Senha)" />
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="label-input-text">Confirmação de Senha *</label>
+            <div>
+                <InputText class="form-control" @bind-Value="@usuario.SenhaConfirmation" type="password" />
+                <ValidationMessage class="validation-message" For="@(() => usuario.SenhaConfirmation)" />
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="label-input-text">Funcionário Vinculado</label>
+            <div>
+                <InputSelectNumber class="form-control" @bind-Value="@usuario.FuncionarioId">
+                    @if (Funcionarios == null)
+                    {
+                        <option value="">-- Carregando --</option>
+                    }
+                    else
+                    {
+                        <option value="0">-- Não Vinculado --</option>
+                        @if (Funcionarios != null)
+                        {
+                            @foreach (var funcionario in Funcionarios)
+                            {
+                                @if (funcionario.Id == usuario.FuncionarioId)
+                                {
+                                    <option selected value="@funcionario.Id">@funcionario.CPF - @funcionario.Nome</option>
+                                }
+                                else
+                                {
+                                    <option value="@funcionario.Id">@funcionario.CPF - @funcionario.Nome</option>
+                                }
+                            }
+                        }
+                    }
+                </InputSelectNumber>
+            </div>
+        </div>
+
+
+        <div id="signup-or-cancel-area">
+            <div>
+                <a class="btn btn-danger" href="usuarios">Cancelar</a>
+            </div>
+            <div>
+                <button type="submit" class="btn btn-success">Salvar</button>
+            </div>
+        </div>
+
+
+    </div>
+    <br />
+    <br />
+    @if (!string.IsNullOrEmpty(ErrorMessage))
+    {
+        <div class="alert alert-danger alert-dismissible">
+            <button type="button" class="close" data-dismiss="alert" @onclick="@(() => ErrorMessage = string.Empty)">×</button>
+            <strong>Erro!</strong> @ErrorMessage
+        </div>
+    }
+
+</EditForm>

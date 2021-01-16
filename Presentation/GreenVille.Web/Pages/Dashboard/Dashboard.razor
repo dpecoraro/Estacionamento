@@ -1,0 +1,92 @@
+﻿<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-4">
+            <div class="col-md-4">
+                <div class="container ctn-dash">
+                    <span>
+                        <MatButton Link="/funcionarios" Raised="true" Class="btn-dash-primary">Funcionários</MatButton>
+                    </span>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="container ctn-dash">
+                    <span>
+                        <MatButton Link="/veiculos" Raised="true" Class="btn-dash-primary">Veículos</MatButton>
+                    </span>
+                </div>
+            </div>
+        </div>
+        <div class="col-8">
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="container ctn-dash">
+                        <span>
+                            <MatButton Link="/usuarios" Raised="true" Class="btn-dash-secondary">Usuários</MatButton>
+                        </span>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="container ctn-dash">
+                        <span>
+                            <MatButton Link="/clientes" Raised="true" Class="btn-dash-secondary">Clientes</MatButton>
+                        </span>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="container ctn-dash">
+                        <span>
+                            <MatButton Link="/vagas" Raised="true" Class="btn-dash-secondary">Vagas</MatButton>
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <div class="row justify-content-center">
+                <div class="col-md-6 offset-md-2">
+                    <div class="container ctn-dash">
+                        <span>
+                            <MatButton Link="/estacionamentos" Raised="true" Class="btn-dash-middle">Estacionamentos</MatButton>
+                        </span>
+                    </div>
+                </div>
+                <div class="col-md-6 offset-md-2">
+                    <div class="container ctn-dash">
+                        <span>
+                            <MatButton Link="/recebimento" Raised="true" Class="btn-dash-middle">Recebimento de Veículos</MatButton>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+@code {
+
+}
+
+<style>
+    .btn-dash-primary {
+        width: 10rem;
+        height: 12rem;
+    }
+
+    .col-md-6 {
+        display: block;
+    }
+
+    .btn-dash-secondary {
+        width: 10rem;
+        height: 5rem;
+    }
+
+    .btn-dash-middle {
+        width: 10rem;
+        height: 5rem;
+    }
+
+    .ctn-dash {
+        padding: 0rem 1rem 1rem 0rem;
+    }
+</style>

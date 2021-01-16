@@ -1,0 +1,120 @@
+﻿@page "/usuarios"
+@using Microsoft.AspNetCore.Authorization
+@attribute [Authorize]
+
+<style>
+
+    .content {
+        margin-left: 18.2px !important;
+    }
+
+    #fetch-user-title {
+        text-align: center;
+        font-size: 1.3em;
+        padding-bottom: 5px;
+    }
+
+    #fetch-user-subtitle {
+        text-align: center;
+        font-size: 0.90em;
+        font-weight: 500;
+        color: rgb(94, 94, 94);
+        padding-bottom: 15px;
+    }
+
+    .btn-primary {
+        height: 36px;
+    }
+
+    .btn-light {
+        height: 37px;
+    }
+
+    .btn-success {
+        height: 36px;
+    }
+
+    .btn-info {
+        width: 60px;
+        height: 30px;
+    }
+
+    .btn-danger {
+        width: 60px;
+        height: 30px;
+    }
+
+    .alert-danger {
+        width: 500px;
+    }
+
+    .fetch-user-help-text {
+        text-align: center;
+        font-size: 1.3em;
+        font-weight: 500;
+        color: black;
+        padding-top: 100px;
+    }
+
+</style>
+
+<br />
+<h3 id="fetch-user-title">Usuários</h3>
+<p id="fetch-user-subtitle">Listagem de Usuários</p>
+
+<div class="form-group">
+    <a class="btn btn-primary" href="/" title="Voltar"><i class="oi oi-home"></i></a>
+    <a class="btn btn-light" @onclick="@(() => OnInitializedAsync())" title="Recarregar"><i class="oi oi-reload"></i></a>
+    <a class="btn btn-success" href="usuarios/create" title="Novo"><i class="oi oi-plus"></i></a>
+</div>
+
+@if (Usuarios == null)
+{
+    <p class="fetch-user-help-text">Carregando...</p>
+}
+else if (Usuarios.Count() == 0)
+{
+    <p class="fetch-user-help-text">Nenhum Registro Encontrado.</p>
+}
+else
+{
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Nome</th>
+                <th>E-mail</th>
+                <th>Vinculado</th>
+                <th>Funcionario CPF</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (UsuarioDTO usuario in Usuarios)
+            {
+                <tr>
+                    <td>@usuario.Id</td>
+                    <td>@usuario.Nome</td>
+                    <td>@usuario.Email</td>
+                    <td>@if(usuario.FuncionarioVinculado) { <strong>X</strong> } else { <strong></strong> }</td>
+                    <td>@usuario.FuncionarioCPF</td>
+                    <td>
+                        <a class="btn btn-info btn-sm" href="usuarios/edit/@usuario.Id" title="Editar"><i class="oi oi-pencil"></i></a>
+                        <button class="btn btn-danger btn-sm" @onclick="@(() => Delete(usuario.Id))" title="Excluir"><i class="oi oi-trash"></i></button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+<br />
+<br />
+<br />
+@if (!string.IsNullOrEmpty(ErrorMessage))
+{
+    <div class="alert alert-danger alert-dismissible">
+        <button type="button" class="close" data-dismiss="alert" @onclick="@(() => ErrorMessage = string.Empty)">×</button>
+        <strong>Erro!</strong> @ErrorMessage
+    </div>
+}

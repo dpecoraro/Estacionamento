@@ -1,0 +1,41 @@
+﻿@page "/clientes/edit/{clienteId:int}"
+@using Microsoft.AspNetCore.Authorization
+@inject NavigationManager uriHelper
+@attribute [Authorize]
+
+<style>
+
+    .content {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    #usuario-title
+    {
+        text-align: center;
+        font-size: 1.3em;
+        padding-bottom: 5px;
+    }
+
+    #usuario-subtitle
+    {
+        text-align: center;
+        font-size: 0.90em;
+        font-weight: 500;
+        color: rgb(94, 94, 94);
+        padding-bottom: 15px;
+    }
+</style>
+
+
+<div id="main-client-create">
+    <div>
+        <h2 id="usuario-title">Editar Cliente</h2>
+        <p id="usuario-subtitle">Informe os dados abaixo para editar o cliente</p>
+    </div>
+    <div>
+        <FormCliente cliente="@cliente" OnValidSubmit="@EditCliente" ErrorMessage="@ErrorMessage" />
+    </div>
+</div>
+

@@ -1,0 +1,40 @@
+﻿@page "/clientes/create"
+@using Microsoft.AspNetCore.Authorization
+@inject NavigationManager uriHelper
+@attribute [Authorize]
+
+<style>
+
+    .content {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    #client-title
+    {
+        text-align: center;
+        font-size: 1.3em;
+        padding-bottom: 5px;
+    }
+
+    #client-subtitle
+    {
+        text-align: center;
+        font-size: 0.90em;
+        font-weight: 500;
+        color: rgb(94, 94, 94);
+        padding-bottom: 15px;
+    }
+
+</style>
+
+<div id="main-client-create">
+    <div>
+        <h2 id="client-title">Cadastrar Cliente</h2>
+        <p id="client-subtitle">Informe os dados abaixo para cadastrar o cliente</p>
+    </div>
+    <div>
+        <FormCliente cliente="@cliente" OnValidSubmit="@CreateCliente" ErrorMessage="@ErrorMessage" />
+    </div>
+</div>
