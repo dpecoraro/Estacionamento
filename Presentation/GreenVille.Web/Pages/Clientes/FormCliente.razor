@@ -1,0 +1,104 @@
+﻿<style>
+
+    .content {
+        display: flex;
+        justify-content: center;
+    }
+
+    .label-input-text {
+        font-size: 0.7500em;
+        font-weight: 600;
+    }
+
+    .form-control {
+        width: 500px;
+        height: 45px;
+        margin: 8px 0;
+        padding: 8px;
+        transition: .3s;
+    }
+
+    .validation-message {
+        width: 450px;
+    }
+
+    #signup-or-cancel-area {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 30px;
+       
+    }
+
+    .btn-success {
+        width: 100px;
+        height: 35px;
+        background-color: #19B95F;
+        color: white;
+        font-size: 0.7500em;
+    }
+
+    .btn-success:hover {
+        background-color: #18AD5A;
+    }
+
+    .btn-danger {
+        width: 100px;
+        height: 35px;
+        font-size: 0.7500em;
+    }
+
+    .alert-danger {
+        width: 500px;
+    }
+
+</style>
+
+<EditForm Model="@cliente" OnValidSubmit="@OnValidSubmit">
+    <DataAnnotationsValidator />
+
+    <div id="main-client-form">
+        <div class="form-group">
+            <label class="label-input-text">Nome *</label>
+            <div>
+                <InputText class="form-control" @bind-Value="@cliente.Nome" />
+                <ValidationMessage class="validation-message" For="@(() => cliente.Nome)" />
+            </div>
+        </div>
+
+        <div class="form-group ">
+            <label class="label-input-text">Telefone *</label>
+            <div>
+                <InputText class="form-control" @bind-Value="@cliente.Telefone" />
+                <ValidationMessage For="@(() => cliente.Telefone)" />
+            </div>
+        </div>
+
+        <div class="form-group ">
+            <label class="label-input-text">CPF *</label>
+            <div>
+                <InputText class="form-control" @bind-Value="@cliente.CPF" />
+                <ValidationMessage For="@(() => cliente.CPF)" />
+            </div>
+        </div>
+
+
+        <div id="signup-or-cancel-area">
+            <div>
+                <a class="btn btn-danger" href="clientes">Cancelar</a>
+            </div>
+            <div>
+                <button type="submit" class="btn btn-success">Salvar</button>
+            </div>
+        </div>
+    </div>
+    <br />
+    <br />
+    @if (!string.IsNullOrEmpty(ErrorMessage))
+    {
+        <div class="alert alert-danger alert-dismissible">
+            <button type="button" class="close" data-dismiss="alert" @onclick="@(() => ErrorMessage = string.Empty)">×</button>
+            <strong>Erro!</strong> @ErrorMessage
+        </div>
+    }
+
+</EditForm>

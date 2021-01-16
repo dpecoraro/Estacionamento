@@ -1,0 +1,178 @@
+﻿@page "/relatorios/vagasPorEstacionamento"
+@using Microsoft.AspNetCore.Authorization
+@attribute [Authorize]
+
+<style>
+
+    .content {
+        margin-left: 18.2px !important;
+    }
+
+    #parking-spaces-title {
+        text-align: center;
+        font-size: 1.3em;
+        padding-bottom: 5px;
+    }
+
+    #parking-spaces-subtitle {
+        text-align: center;
+        font-size: 0.90em;
+        font-weight: 500;
+        color: rgb(94, 94, 94);
+        padding-bottom: 15px;
+    }
+
+    #nav-parking-spaces {
+        display: flex;
+        justify-content: center;
+    }
+
+    #main-parking-spaces {
+        display: flex;
+        justify-content: center;
+        flex-direction: column;
+        width: 500px;
+    }
+
+    #return-search-select-area {
+        display: flex;
+        justify-content: space-between;
+        flex-direction: column;
+        width: 500px;
+        align-items: center;
+    }
+
+    #return-search-area {
+        display: flex;
+        justify-content: space-between;
+    }
+
+    .form-control {
+        width: 500px;
+        height: 45px;
+        margin: 8px 0;
+        padding: 8px;
+        transition: .3s;
+    }
+
+    #return-search-area {
+        display: flex;
+        width: 500px;
+        justify-content: space-between;
+        margin-top: 30px;
+    }
+
+    .btn-primary {
+        width: 100px;
+        height: 35px;
+    }
+
+    .btn-light {
+        width: 100px;
+        height: 35px;
+    }
+
+    .help-text-parking-spaces {
+        text-align: center;
+        font-size: 1.3em;
+        font-weight: 500;
+        color: black;
+        padding-top: 10%;
+    }
+
+</style>
+
+<h3 id="parking-spaces-title">Relatório Vagas Por Estacionamento</h3>
+<p id="parking-spaces-subtitle">Escolha o estacionamento e realize a busca para exibir a lista de vagas por estacionamento</p>
+
+
+<div id="nav-parking-spaces">
+    <div id="main-parking-spaces">
+        <div id="return-search-select-area">
+
+            <div>
+                <select class="form-control" id="drpDownEstacionamento" @bind="@_estacionamentoId">
+                    @if (ListagemEstacionamentos == null)
+                    {
+                        <option value="">-- Carregando --</option>
+                    }
+                    else
+                    {
+                        <option value="0">-- Escolha o Estacionamento --</option>
+                        @if (ListagemEstacionamentos != null)
+                        {
+                            @foreach (var estacionamento in ListagemEstacionamentos)
+                            {
+                                @if (estacionamento.Id == _estacionamentoId)
+                                {
+                                    <option selected value="@estacionamento.Id">@estacionamento.NomeUnidade</option>
+                                }
+                                else
+                                {
+                                    <option value="@estacionamento.Id">@estacionamento.NomeUnidade</option>
+                                }
+                            }
+                        }
+                    }
+                </select>
+            </div>
+
+            <div id="return-search-area">
+                <div>
+                    <a class="btn btn-primary" href="/" title="Voltar"><i class="oi oi-home"></i></a>
+                </div>
+                <div>
+                    <a class="btn btn-light" @onclick="@(() => GetReport())" title="Ver Relatório"><i class="oi oi-magnifying-glass"></i></a>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+@if (VagasList == null)
+{
+    <p class="help-text-parking-spaces">Requisite o Relatório.</p>
+}
+else if (VagasList.Count() == 0)
+{
+    <p class="help-text-parking-spaces">Nenhum registro encontrado.</p>
+}
+else
+{
+    <hr />
+    <br />
+    <small>Estacionamento: @_estacionamentoNome</small>
+    <br />
+    <small>Data de Extração: @DateTime.Now.ToString("dd/MM/yyyy HH:mm")</small>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Nome</th>
+                <th>Ocupada</th>
+                <th>Interditada</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var vaga in VagasList)
+            {
+                <tr>
+                    <td>@vaga.Nome</td>
+                    <td>@if(vaga.Ocupada) { <strong>X</strong> } else { <strong></strong> }</td>
+                    <td>@if(vaga.Interditada) { <strong>X</strong> } else { <strong></strong> }</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+<br />
+<br />
+<br />
+@if (!string.IsNullOrEmpty(_errorMessage))
+{
+    <div class="alert alert-danger alert-dismissible">
+        <button type="button" class="close" data-dismiss="alert" @onclick="@(() => _errorMessage = string.Empty)">×</button>
+        <strong>Erro!</strong> @_errorMessage
+    </div>
+}

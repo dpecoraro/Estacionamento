@@ -1,0 +1,191 @@
+﻿@page "/relatorios/movimentacaoVeiculoPeriodo"
+@using Microsoft.AspNetCore.Authorization
+@attribute [Authorize]
+
+<style>
+
+    .content {
+        margin-left: 18px !important;
+    }
+
+    #main-form-vehicle-by-time {
+        display: flex;
+        justify-content: center;
+    }
+
+    #vehicle-by-time-title {
+        text-align: center;
+        font-size: 1.3em;
+        padding-bottom: 5px;
+    }
+
+    #vehicle-by-time-subtitle {
+        text-align: center;
+        font-size: 0.90em;
+        font-weight: 500;
+        color: rgb(94, 94, 94);
+        padding-bottom: 10px;
+    }
+
+    .form-group {
+        display: flex;
+        justify-content: center;
+        flex-direction: column;
+    }
+
+    .label-input-select {
+        font-size: 0.7500em;
+        font-weight: 600;
+    }
+
+    .form-control {
+        width: 500px;
+        height: 45px;
+        margin: 8px 0;
+        padding: 8px;
+        transition: .3s;
+    }
+
+    .return-search-area {
+        display: flex;
+        width: 500px;
+        justify-content: space-between;
+        margin-top: 30px;
+    }
+
+    #period-vehicle-by-time {
+        display: flex;
+        justify-content: space-between;
+        flex-direction: column;
+        width: 45%;
+    }
+
+    .btn-primary {
+        width: 100px;
+        height: 35px;
+    }
+
+    .btn-light {
+        width: 100px;
+        height: 35px;
+    }
+
+    .vehicle-by-time-help-text {
+        text-align: center;
+        font-size: 1.3em;
+        font-weight: 500;
+        color: black;
+        padding-top: 28px;
+    }
+
+</style>
+
+<h3 id="vehicle-by-time-title">Relatório de Movimentação de Veículos</h3>
+<p id="vehicle-by-time-subtitle">Escolha o veículo e defina o período para exibir a movimentação</p>
+
+
+
+    <div id="main-form-vehicle-by-time">
+        <EditForm class="form-group" model="@_veiculoForm" OnValidSubmit="GetReport">
+            <div>
+                <label class="label-input-select">Veículo *</label>
+                <div>
+                    <InputSelectNumber class="form-control" Value="@_veiculoId" ValueExpression="@(() => _veiculoId)"
+                                       ValueChanged="@((int value) => VeiculoList_Change(value))">
+                        @if (ListagemVeiculos == null)
+                        {
+                            <option value="">-- Carregando --</option>
+                        }
+                        else
+                        {
+                            <option value="0">-- Escolha o Veículo --</option>
+                            @if (ListagemVeiculos != null)
+                            {
+                                @foreach (var veiculo in ListagemVeiculos)
+                                {
+                                    <option value="@veiculo.Id">@veiculo.Placa</option>
+                                }
+                            }
+                        }
+                    </InputSelectNumber>
+                </div>
+            </div>
+
+            <div id="period-vehicle-by-time">
+                <div>
+                    <label class="label-input-select">Data/Hora Início *</label>
+                </div>
+                <div>
+                    <InputDateTime class="form-control" @bind-Value="@_dataInicio" format-value="dd/MM/yyyy hh:mm"></InputDateTime>
+                </div>
+
+                <div>
+                    <label class="label-input-select">Data/Hora Término *</label>
+                </div>
+                <div>
+                    <InputDateTime class="form-control" @bind-Value="@_dataFim" format-value="dd/MM/yyyy hh:mm"></InputDateTime>
+                </div>
+            </div>
+
+            <div class="return-search-area">
+                <div>
+                    <a class="btn btn-primary" href="/" title="Voltar"><i class="oi oi-home"></i></a>
+                </div>
+                <div>
+                    <a class="btn btn-light" @onclick="@(() => GetReport())" title="Ver Relatório"><i class="oi oi-magnifying-glass"></i></a>
+                </div>
+            </div>
+        </EditForm>
+    </div>
+
+
+@if (MovimentacaoList == null)
+{
+    <p class="vehicle-by-time-help-text">Requisite o Relatório.</p>
+}
+else if (MovimentacaoList.Count() == 0)
+{
+    <p class="vehicle-by-time-help-text">Nenhum Registro Encontrado.</p>
+}
+else
+{
+    <hr />
+    <br />
+    <small>Veículo: @_veiculoPlaca</small>
+    <br />
+    <small>Data de Extração: @DateTime.Now.ToString("dd/MM/yyyy HH:mm")</small>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Data/Hora</th>
+                <th>Estacionamento</th>
+                <th>Vaga</th>
+                <th>Entrada/Saída</th>
+                <th>Valor Pago</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var movimento in MovimentacaoList)
+            {
+                <tr>
+                    <td>@movimento.Momento.ToString("dd/MM/yyyy HH:mm")</td>
+                    <td>@movimento.EstacionamentoUnidade</td>
+                    <td>@movimento.VagaNome</td>
+                    <td>@if(movimento.Entrada) { <text>Entrada</text> } else { <text>Saída</text> }</td>
+                    <td>@if(movimento.Mensalista) { <small>Mensalista</small> } else { <text>@movimento.ValorPago.ToString("C")</text> }</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+<br />
+<br />
+<br />
+@if (!string.IsNullOrEmpty(_errorMessage))
+{
+    <div class="alert alert-danger alert-dismissible">
+        <button type="button" class="close" data-dismiss="alert" @onclick="@(() => _errorMessage = string.Empty)">×</button>
+        <strong>Erro!</strong> @_errorMessage
+    </div>
+}

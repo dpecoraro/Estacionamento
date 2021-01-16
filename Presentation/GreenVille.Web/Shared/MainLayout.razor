@@ -1,0 +1,83 @@
+﻿@inherits LayoutComponentBase
+
+<div class="main">
+    <MatThemeProvider Theme="@theme">
+        <div class="top-row">
+            <MatAppBarContainer class="top-row">
+                <MatAppBar Fixed="true">
+                    <MatAppBarRow>
+                        <MatAppBarSection>
+                            <MatIconButton OnClick="@MenuClick" RefBack="@buttonForwardRef" Icon="menu"></MatIconButton>
+                            <p>
+                                <MatMenu @ref="Menu" TargetForwardRef="@buttonForwardRef">
+                                    <MatList>
+                                        <MatListItem Href=""><MatIcon Icon="home"></MatIcon>&nbsp;&nbsp;Home</MatListItem>
+                                        <MatDivider></MatDivider>
+                                        <MatListItem Href="logout"><MatIcon Icon="cancel_presentation"></MatIcon>&nbsp;&nbsp;Sair</MatListItem>
+                                    </MatList>
+                                </MatMenu>
+                            </p>
+                            <div class="top-bar-title">
+                                <MatAppBarTitle Class="top-title">Sistema de Controle de Estacionamentos Greenville Control</MatAppBarTitle>
+                            </div>
+                        </MatAppBarSection>
+                    </MatAppBarRow>
+                </MatAppBar>
+            </MatAppBarContainer>
+            <br />
+            <br />
+            <br />
+            <br />
+        </div>
+
+
+        <div class="content">
+            @Body
+        </div>
+    </MatThemeProvider>
+</div>
+
+
+@code
+    {
+    ForwardRef buttonForwardRef = new ForwardRef();
+    BaseMatMenu Menu;
+
+    public void MenuClick(MouseEventArgs e)
+    {
+        this.Menu.OpenAsync();
+    }
+}
+
+<style>
+    .main .top-row {
+        background-color: #00bfa5;
+        justify-content: left;
+        align-items: baseline;
+    }
+
+    .top-bar-title {
+        display: flex;
+        justify-content: center;
+        width: 100%;
+    }
+
+    .top-title {
+        font-size: 1.15em;
+        font-weight: 400;
+    }
+
+    .content {
+        width: 98.7%;
+        height: 100%;
+        padding-left: 0px !important;
+    }
+</style>
+
+@code{
+    MatTheme theme = new MatTheme()
+    {
+        Primary = "#00bfa5",
+        Secondary = "#00796b"
+    };
+}

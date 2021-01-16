@@ -1,0 +1,162 @@
+﻿<style>
+
+    .content {
+        display: flex;
+        justify-content: center;
+    }
+
+    .label-input-text {
+        font-size: 0.7500em;
+        font-weight: 600;
+    }
+
+    .form-control {
+        width: 500px;
+        height: 45px;
+        margin: 8px 0;
+        padding: 8px;
+        transition: .3s;
+    }
+
+    .form-control-checkbox {
+        height: 30px;
+        margin: 8px 0;
+        padding: 8px;
+        transition: .3s;
+    }
+
+    .validation-message {
+        width: 450px;
+    }
+
+    #signup-or-cancel-area {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 30px;
+       
+    }
+
+    .btn-success {
+        width: 100px;
+        height: 35px;
+        background-color: #19B95F;
+        color: white;
+        font-size: 0.7500em;
+    }
+
+    .btn-success:hover {
+        background-color: #18AD5A;
+    }
+
+    .btn-danger {
+        width: 100px;
+        height: 35px;
+        font-size: 0.7500em;
+    }
+
+    .alert-danger {
+        width: 500px;
+    }
+
+</style>
+
+
+<EditForm Model="@veiculo" OnValidSubmit="@OnValidSubmit">
+    <DataAnnotationsValidator />
+
+    <div id="main-veiculo-form">
+
+        <div class="form-group">
+            <label class="label-input-text">Placa *</label>
+            <div>
+                <InputText class="form-control" @bind-Value="@veiculo.Placa" />
+                <ValidationMessage class="validation-message" For="@(() => veiculo.Placa)" />
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="label-input-text">Modelo</label>
+            <div>
+                <InputText class="form-control" @bind-Value="@veiculo.Modelo" />
+                <ValidationMessage class="validation-message" For="@(() => veiculo.Modelo)" />
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="label-input-text">Cor</label>
+            <div>
+                <InputText class="form-control" @bind-Value="@veiculo.Cor" />
+                <ValidationMessage class="validation-message" For="@(() => veiculo.Cor)" />
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="label-input-text">Ano</label>
+            <div>
+                <InputNumber class="form-control" @bind-Value="@veiculo.Ano" />
+                <ValidationMessage class="validation-message" For="@(() => veiculo.Ano)" />
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="label-input-text">Mensalista</label>
+            <div>
+                <InputCheckbox class="form-control-checkbox" @bind-Value="@veiculo.Mensalista" />
+                <ValidationMessage class="validation-message" For="@(() => veiculo.Mensalista)" />
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="label-input-text">Proprietário *</label>
+            <div>
+                <InputSelectNumber class="form-control" @bind-Value="@veiculo.ClienteId">
+                    @if (Clientes == null)
+                    {
+                        <option value="">-- Carregando --</option>
+                    }
+                    else
+                    {
+                        <option value="0">-- Não Vinculado --</option>
+                        @if (Clientes != null)
+                        {
+                            @foreach (var cliente in Clientes)
+                            {
+                                @if (cliente.Id == veiculo.ClienteId)
+                                {
+                                    <option selected value="@cliente.Id">@cliente.CPF - @cliente.Nome</option>
+                                }
+                                else
+                                {
+                                    <option value="@cliente.Id">@cliente.CPF - @cliente.Nome</option>
+                                }
+                            }
+                        }
+                    }
+                </InputSelectNumber>
+                <ValidationMessage class="validation-message" For="@(() => veiculo.ClienteId)" />
+            </div>
+        </div>
+
+
+        <div id="signup-or-cancel-area">
+            <div>
+                <a class="btn btn-danger" href="veiculos">Cancelar</a>
+            </div>
+            <div>
+                <button type="submit" class="btn btn-success">Salvar</button>
+            </div>
+        </div>
+
+
+    </div>
+    <br />
+    <br />
+    @if (!string.IsNullOrEmpty(ErrorMessage))
+    {
+        <div class="alert alert-danger alert-dismissible">
+            <button type="button" class="close" data-dismiss="alert" @onclick="@(() => ErrorMessage = string.Empty)">×</button>
+            <strong>Erro!</strong> @ErrorMessage
+        </div>
+    }
+
+</EditForm>

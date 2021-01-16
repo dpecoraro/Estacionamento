@@ -1,0 +1,163 @@
+﻿<style>
+
+    .content {
+        display: flex;
+        justify-content: center;
+    }
+
+    .label-input-text {
+        font-size: 0.7500em;
+        font-weight: 600;
+    }
+
+    .form-control {
+        width: 500px;
+        height: 45px;
+        margin: 8px 0;
+        padding: 8px;
+        transition: .3s;
+    }
+
+    .validation-message {
+        width: 450px;
+    }
+
+    #signup-or-cancel-area {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 30px;
+       
+    }
+
+    .btn-success {
+        width: 100px;
+        height: 35px;
+        background-color: #19B95F;
+        color: white;
+        font-size: 0.7500em;
+    }
+
+    .btn-success:hover {
+        background-color: #18AD5A;
+    }
+
+    .btn-danger {
+        width: 100px;
+        height: 35px;
+        font-size: 0.7500em;
+    }
+
+    .alert-danger {
+        width: 500px;
+    }
+
+</style>
+
+
+
+<EditForm Model="@funci" OnValidSubmit="@OnValidSubmit">
+    <DataAnnotationsValidator />
+
+    <div id="main-funcionario-form">
+
+        <div class="form-group">
+            <label class="label-input-text">Nome *</label>
+            <div>
+                <InputText class="form-control" @bind-Value="@funci.Nome" />
+                <ValidationMessage class="validation-message" For="@(() => funci.Nome)" />
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="label-input-text">CPF *</label>
+            <div>
+                <InputText class="form-control" @bind-Value="@funci.CPF" />
+                <ValidationMessage class="validation-message" For="@(() => funci.CPF)" />
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="label-input-text">Cargo *</label>
+            <div>
+                <InputSelectNumber class="form-control" @bind-Value="@funci.CargoId">
+                    @if (Cargos == null)
+                    {
+                        <option value="">-- Carregando --</option>
+                    }
+                    else
+                    {
+                        <option value="">-- Escolha o Cargo --</option>
+                        @if (Cargos != null)
+                        {
+                            @foreach (var cargo in Cargos)
+                            {
+                                @if (cargo.Id == funci.CargoId)
+                                {
+                                    <option selected value="@cargo.Id">@cargo.Descricao</option>
+                                }
+                                else
+                                {
+                                    <option value="@cargo.Id">@cargo.Descricao</option>
+                                }
+                            }
+                        }
+                    }
+                </InputSelectNumber>
+                <ValidationMessage For="@(() => funci.CargoId)" />
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="label-input-text">Estacionamento *</label>
+            <div>
+                <InputSelectNumber class="form-control" @bind-Value="@funci.EstacionamentoId">
+                    @if (Estacionamentos == null)
+                    {
+                        <option value="">-- Carregando --</option>
+                    }
+                    else
+                    {
+                        <option value="">-- Escolha o Estacionamento --</option>
+                        @if (Estacionamentos != null)
+                        {
+                            @foreach (var estacionamento in Estacionamentos)
+                            {
+                                @if (estacionamento.Id == funci.EstacionamentoId)
+                                {
+                                    <option selected value="@estacionamento.Id">@estacionamento.NomeUnidade</option>
+                                }
+                                else
+                                {
+                                    <option value="@estacionamento.Id">@estacionamento.NomeUnidade</option>
+                                }
+                            }
+                        }
+                    }
+                </InputSelectNumber>
+                <ValidationMessage For="@(() => funci.EstacionamentoId)" />
+            </div>
+        </div>
+
+
+        <div id="signup-or-cancel-area">
+            <div>
+                <a class="btn btn-danger" href="funcionarios">Cancelar</a>
+            </div>
+            <div>
+                <button type="submit" class="btn btn-success">Salvar</button>
+            </div>
+        </div>
+
+
+    </div>
+    <br />
+    <br />
+    @if (!string.IsNullOrEmpty(ErrorMessage))
+    {
+        <div class="alert alert-danger alert-dismissible">
+            <button type="button" class="close" data-dismiss="alert" @onclick="@(() => ErrorMessage = string.Empty)">×</button>
+            <strong>Erro!</strong> @ErrorMessage
+        </div>
+    }
+
+</EditForm>

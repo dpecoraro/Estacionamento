@@ -1,0 +1,233 @@
+﻿@page "/recebimento"
+@using Microsoft.AspNetCore.Authorization
+@inject NavigationManager uriHelper
+@attribute [Authorize]
+
+<style>
+
+    .content {
+        display: flex;
+        align-items: flex-start;
+        justify-content: center;
+    }
+
+    #main-form-receive{
+       margin-top: 6px;
+    }
+
+    #receive-title {
+        text-align: center;
+        font-size: 1.3em;
+        padding-bottom: 5px;
+    }
+
+    #receive-subtitle {
+        text-align: center;
+        font-size: 0.90em;
+        font-weight: 500;
+        color: rgb(94, 94, 94);
+        padding-bottom: 10px;
+    }
+
+    .label-input-select {
+        font-size: 0.7500em;
+        font-weight: 600;
+    }
+
+    .form-control {
+        width: 500px;
+        height: 45px;
+        margin: 8px 0;
+        padding: 8px;
+        transition: .3s;
+    }
+
+    #receive-or-cancel-area {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 30px;
+        width: 500px;
+    }
+
+    .btn-success {
+        width: 100px;
+        height: 35px;
+        background-color: #19B95F;
+        color: white;
+        font-size: 0.7500em;
+    }
+
+    .btn-success:hover {
+        background-color: #18AD5A;
+    }
+
+    .btn-danger {
+        width: 100px;
+        height: 35px;
+        font-size: 0.7500em;
+    }
+
+    .alert-danger {
+        width: 500px;   
+    }
+
+</style>
+
+
+    <div id="main-form-receive">
+        <h3 id="receive-title">Recebimento de Veículos</h3>
+        <p id="receive-subtitle">Preencha os dados abaixo para receber o veículo</p>
+       
+        <EditForm Model="@_alocacao" OnValidSubmit="ReceiveVehicle">
+            <DataAnnotationsValidator />
+
+            <div class="form-group ">
+                <label class="label-input-select">Estacionamento *</label>
+                <div>
+                    <InputSelectNumber class="form-control" Value="@_estacionamentoId" ValueExpression="@(() => _estacionamentoId)"
+                                       ValueChanged="@((int value) => EstacionamentoList_Change(value))">
+                        @if (ListagemEstacionamentos == null)
+                        {
+                            <option value="">-- Carregando --</option>
+                        }
+                        else
+                        {
+                            <option value="">-- Escolha o Estacionamento --</option>
+                            @if (ListagemEstacionamentos != null)
+                            {
+                                @foreach (var estacionamento in ListagemEstacionamentos)
+                                {
+                                    @if (estacionamento.Id == _estacionamentoId)
+                                    {
+                                        <option selected value="@estacionamento.Id">@estacionamento.NomeUnidade</option>
+                                    }
+                                    else
+                                    {
+                                        <option value="@estacionamento.Id">@estacionamento.NomeUnidade</option>
+                                    }
+                                }
+                            }
+                        }
+                    </InputSelectNumber>
+                </div>
+            </div>
+
+            <div class="form-group ">
+                <label class="label-input-select">Vaga *</label>
+                <div>
+                    <InputSelectNumber class="form-control" @bind-Value="@_alocacao.VagaId">
+                        @if (ListagemVagas == null)
+                        {
+                            <option value="0">-- Aguardando Seleção de Estacionamento --</option>
+                        }
+                        else
+                        {
+                            <option value="0">-- Escolha a Vaga --</option>
+                            @if (ListagemVagas != null)
+                            {
+                                @foreach (var vaga in ListagemVagas)
+                                {
+                                    <option value="@vaga.Id">@vaga.Nome</option>
+                                }
+                            }
+                        }
+                    </InputSelectNumber>
+                </div>
+            </div>
+
+            <div class="form-group ">
+                <label class="label-input-select">Veículo *</label>
+                <div>
+                    <InputSelectNumber class="form-control" @bind-Value="@_alocacao.VeiculoId">
+                        @if (ListagemVeiculos == null)
+                        {
+                            <option value="">-- Carregando --</option>
+                        }
+                        else
+                        {
+                            <option value="">-- Escolha um Veículo --</option>
+                            @if (ListagemVeiculos != null)
+                            {
+                                @foreach (var veiculo in ListagemVeiculos)
+                                {
+                                    <option value="@veiculo.Id">@veiculo.Placa</option>
+                                }
+                            }
+                        }
+                    </InputSelectNumber>
+                </div>
+            </div>
+
+            <div class="form-group ">
+                <label class="label-input-select">Manobrista *</label>
+                <div>
+                    <InputSelectNumber class="form-control" @bind-Value="@_alocacao.ManobristaEntradaId">
+                        @if (ListagemManobristas == null)
+                        {
+                            <option value="0">-- Aguardando Seleção de Estacionamento --</option>
+                        }
+                        else
+                        {
+                            <option value="0">-- Escolha o Manobrista --</option>
+                            @if (ListagemManobristas != null)
+                            {
+                                @foreach (var funcionario in ListagemManobristas)
+                                {
+                                    <option value="@funcionario.Id">@funcionario.Nome</option>
+                                }
+                            }
+                        }
+                    </InputSelectNumber>
+                </div>
+            </div>
+
+            <div class="form-group ">
+                <label class="label-input-select">Atendente *</label>
+                <div>
+                    <InputSelectNumber class="form-control" @bind-Value="@_alocacao.AtendenteEntradaId">
+                        @if (ListagemAtendentes == null)
+                        {
+                            <option value="0">-- Aguardando Seleção de Estacionamento --</option>
+                        }
+                        else
+                        {
+                            <option value="0">-- Escolha o Atendente --</option>
+                            @if (ListagemAtendentes != null)
+                            {
+                                @foreach (var funcionario in ListagemAtendentes)
+                                {
+                                    <option value="@funcionario.Id">@funcionario.Nome</option>
+                                }
+                            }
+                        }
+                    </InputSelectNumber>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="label-input-select">Data/Hora de Entrada *</label>
+                <div>
+                    <InputDateTime class="form-control" @bind-Value="@_alocacao.Entrada" format-value="dd/MM/yyyy hh:mm"></InputDateTime>
+                    <ValidationMessage For="@(() => _alocacao.Entrada)" />
+                </div>
+            </div>
+            <div id="receive-or-cancel-area">
+                <div >
+                    <a class="btn btn-danger" href="/">Cancelar</a>
+                </div>
+                <div>
+                    <button type="submit" class="btn btn-success ">Receber</button>
+                </div>
+            </div>
+
+            <br />
+            <br />
+            @if (!string.IsNullOrEmpty(_errorMessage))
+            {
+                <div class="alert alert-danger alert-dismissible">
+                    <button type="button" class="close" data-dismiss="alert" @onclick="@(() => _errorMessage = string.Empty)">×</button>
+                    <strong>Erro!</strong> @_errorMessage
+                </div>
+            }
+        </EditForm>
+    </div>

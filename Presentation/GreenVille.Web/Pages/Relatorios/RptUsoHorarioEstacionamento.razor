@@ -1,0 +1,195 @@
+﻿@page "/relatorios/usoHorarioEstacionamento"
+@using Microsoft.AspNetCore.Authorization
+@attribute [Authorize]
+
+<style>
+
+    .content {
+        margin-left: 18.2px !important;
+    }
+
+    #parking-by-time-title {
+        text-align: center;
+        font-size: 1.3em;
+        padding-bottom: 5px;
+    }
+
+    #parking-by-time-subtitle {
+        text-align: center;
+        font-size: 0.90em;
+        font-weight: 500;
+        color: rgb(94, 94, 94);
+        padding-bottom: 10px;
+    }
+
+    #main-parking-by-time {
+        display: flex;
+        justify-content: center;
+    }
+
+    #form-parking-by-time {
+        width: 500px;
+    }
+
+    .label-input-select {
+        font-size: 0.7500em;
+        font-weight: 600;
+    }
+
+    .form-control {
+        width: 500px;
+        height: 45px;
+        margin: 8px 0;
+        padding: 8px;
+        transition: .3s;
+    }
+
+    .btn-primary {
+        width: 100px;
+        height: 35px;
+    }
+
+    .btn-light {
+        width: 100px;
+        height: 35px;
+    }
+
+    .return-search-area {
+        display: flex;
+        width: 500px;
+        justify-content: space-between;
+        margin-top: 30px;
+    }
+
+    .parking-by-time-help-text {
+        text-align: center;
+        font-size: 1.3em;
+        font-weight: 500;
+        color: black;
+        padding-top: 100px;
+    }
+
+</style>
+
+<h3 id="parking-by-time-title">Relatório de Uso de Vagas</h3>
+<p id="parking-by-time-subtitle">Defina o período para exibir o uso de vagas por horário</p>
+
+
+<div id="main-parking-by-time">
+    <EditForm model="@_estacionamentoForm" OnValidSubmit="GetReport">
+        <div id="form-parking-by-time">
+            <div id="period-parking-by-time">
+                <div>
+                    <label class="label-input-select">Data/Hora Início *</label>
+                    <InputDate class="form-control" @bind-Value="@_dataInicio" format-value="dd/MM/yyyy"></InputDate>
+
+                </div>
+                <div>
+                    <label class="label-input-select">Data/Hora Término *</label>
+                    <InputDate class="form-control" @bind-Value="@_dataFim" format-value="dd/MM/yyyy"></InputDate>
+                </div>
+            </div>
+
+            <div class="return-search-area">
+                <div>
+                    <a class="btn btn-primary" href="/" title="Voltar"><i class="oi oi-home"></i></a>
+                </div>
+                <div>
+                    <a class="btn btn-light" @onclick="@(() => GetReport())" title="Ver Relatório"><i class="oi oi-magnifying-glass"></i></a>
+                </div>
+            </div>
+        </div>
+    </EditForm>
+</div>
+
+@if (UsoEstacionamentoList == null)
+{
+    <p class="parking-by-time-help-text">Requisite o Relatório.</p>
+}
+else if (UsoEstacionamentoList.Count() == 0)
+{
+    <p class="parking-by-time-help-text">Nenhum Registro Encontrado.</p>
+}
+else
+{
+    <hr />
+    <br />
+    <small>Data de Extração: @DateTime.Now.ToString("dd/MM/yyyy HH:mm")</small>
+    <br />
+    <small>Período do Levantamento: @_extractDataInic.ToString("dd/MM/yyyy")  à  @_extractDataFim.ToString("dd/MM/yyyy")</small>
+    <br />
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Estacionamento</th>
+                <th>00-01h</th>
+                <th>01-02h</th>
+                <th>02-03h</th>
+                <th>03-04h</th>
+                <th>04-05h</th>
+                <th>05-06h</th>
+                <th>06-07h</th>
+                <th>07-08h</th>
+                <th>08-09h</th>
+                <th>09-10h</th>
+                <th>10-11h</th>
+                <th>11-12h</th>
+                <th>12-13h</th>
+                <th>13-14h</th>
+                <th>14-15h</th>
+                <th>15-16h</th>
+                <th>16-17h</th>
+                <th>17-18h</th>
+                <th>18-19h</th>
+                <th>19-20h</th>
+                <th>20-21h</th>
+                <th>21-22h</th>
+                <th>22-23h</th>
+                <th>23-24h</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var usoEstac in UsoEstacionamentoList)
+            {
+                <tr>
+                    <td>@usoEstac.NomeEstacionamento</td>
+                    <td>@usoEstac.Alocacoes_00a01</td>
+                    <td>@usoEstac.Alocacoes_01a02</td>
+                    <td>@usoEstac.Alocacoes_02a03</td>
+                    <td>@usoEstac.Alocacoes_03a04</td>
+                    <td>@usoEstac.Alocacoes_04a05</td>
+                    <td>@usoEstac.Alocacoes_05a06</td>
+                    <td>@usoEstac.Alocacoes_06a07</td>
+                    <td>@usoEstac.Alocacoes_07a08</td>
+                    <td>@usoEstac.Alocacoes_08a09</td>
+                    <td>@usoEstac.Alocacoes_09a10</td>
+                    <td>@usoEstac.Alocacoes_10a11</td>
+                    <td>@usoEstac.Alocacoes_11a12</td>
+                    <td>@usoEstac.Alocacoes_12a13</td>
+                    <td>@usoEstac.Alocacoes_13a14</td>
+                    <td>@usoEstac.Alocacoes_14a15</td>
+                    <td>@usoEstac.Alocacoes_15a16</td>
+                    <td>@usoEstac.Alocacoes_16a17</td>
+                    <td>@usoEstac.Alocacoes_17a18</td>
+                    <td>@usoEstac.Alocacoes_18a19</td>
+                    <td>@usoEstac.Alocacoes_19a20</td>
+                    <td>@usoEstac.Alocacoes_20a21</td>
+                    <td>@usoEstac.Alocacoes_21a22</td>
+                    <td>@usoEstac.Alocacoes_22a23</td>
+                    <td>@usoEstac.Alocacoes_23a24</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+<br />
+<br />
+<br />
+@if (!string.IsNullOrEmpty(_errorMessage))
+{
+    <div class="alert alert-danger alert-dismissible">
+        <button type="button" class="close" data-dismiss="alert" @onclick="@(() => _errorMessage = string.Empty)">×</button>
+        <strong>Erro!</strong> @_errorMessage
+    </div>
+}

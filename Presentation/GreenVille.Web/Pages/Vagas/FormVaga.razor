@@ -1,0 +1,145 @@
+﻿<style>
+
+    .content {
+        display: flex;
+        justify-content: center;
+    }
+
+    .label-input-text {
+        font-size: 0.7500em;
+        font-weight: 600;
+    }
+
+    .form-control {
+        width: 500px;
+        height: 45px;
+        margin: 8px 0;
+        padding: 8px;
+        transition: .3s;
+    }
+
+    .form-control-checkbox {
+        height: 30px;
+        margin: 8px 0;
+        padding: 8px;
+        transition: .3s;
+    }
+
+    .validation-message {
+        width: 450px;
+    }
+
+    #signup-or-cancel-area {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 30px;
+       
+    }
+
+    .btn-success {
+        width: 100px;
+        height: 35px;
+        background-color: #19B95F;
+        color: white;
+        font-size: 0.7500em;
+    }
+
+    .btn-success:hover {
+        background-color: #18AD5A;
+    }
+
+    .btn-danger {
+        width: 100px;
+        height: 35px;
+        font-size: 0.7500em;
+    }
+
+    .alert-danger {
+        width: 500px;
+    }
+
+</style>
+
+<EditForm Model="@vaga" OnValidSubmit="@OnValidSubmit">
+    <DataAnnotationsValidator />
+
+    <div id="main-vaga-form">
+
+        <div class="form-group">
+            <label class="label-input-text">Nome *</label>
+            <div>
+                <InputText class="form-control" @bind-Value="@vaga.Nome" />
+                <ValidationMessage class="validation-message" For="@(() => vaga.Nome)" />
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="label-input-text">Ocupada</label>
+            <div>
+                <InputCheckbox class="form-control-checkbox" @bind-Value="@vaga.Ocupada" />
+                <ValidationMessage class="validation-message" For="@(() => vaga.Ocupada)" />
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="label-input-text">Interditada</label>
+            <div>
+                <InputCheckbox class="form-control-checkbox" @bind-Value="@vaga.Interditada" />
+                <ValidationMessage class="validation-message" For="@(() => vaga.Interditada)" />
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="label-input-text">Estacionamento *</label>
+            <div>
+                <InputSelectNumber class="form-control" @bind-Value="@vaga.EstacionamentoId">
+                    @if (Estacionamentos == null)
+                    {
+                        <option value="">-- Carregando --</option>
+                    }
+                    else
+                    {
+                        <option value="">-- Escolha o Estacionamento --</option>
+                        @if (Estacionamentos != null)
+                        {
+                            @foreach (var estacionamento in Estacionamentos)
+                            {
+                                @if (estacionamento.Id == vaga.EstacionamentoId)
+                                {
+                                    <option selected value="@estacionamento.Id">@estacionamento.NomeUnidade</option>
+                                }
+                                else
+                                {
+                                    <option value="@estacionamento.Id">@estacionamento.NomeUnidade</option>
+                                }
+                            }
+                        }
+                    }
+                </InputSelectNumber>
+                <ValidationMessage For="@(() => vaga.EstacionamentoId)" />
+            </div>
+        </div>
+
+
+        <div id="signup-or-cancel-area">
+            <div>
+                <a class="btn btn-danger" href="vagas">Cancelar</a>
+            </div>
+            <div>
+                <button type="submit" class="btn btn-success">Salvar</button>
+            </div>
+        </div>
+
+
+    </div>
+    <br />
+    <br />
+    @if (!string.IsNullOrEmpty(ErrorMessage))
+    {
+        <div class="alert alert-danger alert-dismissible">
+            <button type="button" class="close" data-dismiss="alert" @onclick="@(() => ErrorMessage = string.Empty)">×</button>
+            <strong>Erro!</strong> @ErrorMessage
+        </div>
+    }
+
+</EditForm>

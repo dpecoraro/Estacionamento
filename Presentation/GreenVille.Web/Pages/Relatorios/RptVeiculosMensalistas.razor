@@ -1,0 +1,138 @@
+﻿@page "/relatorios/veiculosMensalistas"
+@using Microsoft.AspNetCore.Authorization
+@attribute [Authorize]
+
+<style>
+
+    .content {
+        margin-left: 18.2px !important;
+    }
+
+    #main-vehicle-monthly {
+        display: flex;
+        justify-content: center;
+    }
+
+    #vehicle-monthly-title-subtitle {
+        width: 500px;
+        padding-bottom: 20px;
+    }
+
+    #vehicle-monthly-title {
+        text-align: center;
+        font-size: 1.3em;
+        padding-bottom: 5px;
+    }
+
+    #vehicle-monthly-subtitle {
+        text-align: center;
+        font-size: 0.90em;
+        font-weight: 500;
+        color: rgb(94, 94, 94);
+        padding-bottom: 15px;
+    }
+
+    .form-group {
+        display: flex;
+        justify-content: space-evenly;
+        width: 500px;
+    }
+
+    .btn-primary {
+        width: 100px;
+        height: 35px;
+    }
+
+    .btn-light {
+        width: 100px;
+        height: 35px;
+    }
+
+    .vehicle-monthly-help-text {
+        text-align: center;
+        font-size: 1.3em;
+        font-weight: 500;
+        color: black;
+        padding-top: 10%;
+    }
+
+</style>
+
+<div id="main-vehicle-monthly">
+    <div>
+        <div id="vehicle-monthly-title-subtitle">
+            <div>
+                <h3 id="vehicle-monthly-title">Relatório de Veículos Mensalistas</h3>
+            </div>
+            <div>
+                <p id="vehicle-monthly-subtitle">Realize a busca para ver a lista de veículos mensalistas</p>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div>
+                <a class="btn btn-primary" href="/" title="Voltar"><i class="oi oi-home"></i></a>
+            </div>
+            <div>
+                <a class="btn btn-light" @onclick="@(() => GetReport())" title="Ver Relatório"><i class="oi oi-magnifying-glass"></i></a>
+            </div>
+        </div>
+    </div>
+</div>
+
+@if (VeiculosMensalistas == null)
+{   
+    <p class="vehicle-monthly-help-text">Requisite o Relatório.</p>
+}
+else if (VeiculosMensalistas.Count() == 0)
+{
+    <p class="vehicle-monthly-help-text">Nenhum Registro Encontrado.</p>
+}
+else
+{
+    <hr />
+    <br />
+    <small>Data de Extração: @DateTime.Now.ToString("dd/MM/yyyy HH:mm")</small>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Placa</th>
+                <th>Modelo</th>
+                <th>Cor</th>
+                <th>Ano</th>
+                <th>Proprietários</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var veicMensalista in VeiculosMensalistas)
+            {
+                <tr>
+                    <td>@veicMensalista.Placa</td>
+                    <td>@veicMensalista.Modelo</td>
+                    <td>@veicMensalista.Cor</td>
+                    <td>@veicMensalista.Ano</td>
+                    <td>
+                        @if(veicMensalista.Proprietarios != null)
+                        {
+                            @foreach (var proprietario in veicMensalista.Proprietarios)
+                            {
+                                <text>@proprietario.Nome</text><br />
+                            }
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+<br />
+<br />
+<br />
+@if (!string.IsNullOrEmpty(ErrorMessage))
+{
+    <div class="alert alert-danger alert-dismissible">
+        <button type="button" class="close" data-dismiss="alert" @onclick="@(() => ErrorMessage = string.Empty)">×</button>
+        <strong>Erro!</strong> @ErrorMessage
+    </div>
+}

@@ -1,0 +1,235 @@
+﻿@page "/alocacoes/retirar/{alocacaoId:int}"
+@using Microsoft.AspNetCore.Authorization
+@inject NavigationManager uriHelper
+@attribute [Authorize]
+
+<style>
+
+    .content {
+        display: flex;
+        justify-content: center;
+        align-items: flex-start;
+    }
+
+    .remove-title {
+        text-align: center;
+        font-size: 1.0em;
+        padding-bottom: 8px;
+    }
+
+    #main-remove-vehicle{
+        display: flex;
+        justify-content:center;
+        flex-direction: column;
+    }
+
+    .label-input-text {
+        font-size: 0.7500em;
+        font-weight: 600;
+    }
+
+    .div-show-info {
+        display: flex;
+        justify-content: center;
+        height: 45px;
+        width: 500px;
+        border: 1px solid rgba(0, 0, 0, 0.849);
+        border-color: #ced4da;
+        border-radius: 0.25em;
+        margin: 8px 0;
+        padding: 8px;
+    }
+
+    .form-control {
+        width: 500px;
+        height: 45px;
+        margin: 8px 0;
+        padding: 8px;
+        transition: .3s;
+    }
+
+    .cancel-calc-confirm-area {
+        display: flex;
+        justify-content: space-between;
+        width: 500px;
+        margin-top: 30px;
+    }
+
+    .btn-success {
+        width: 100px;
+        height: 35px;
+        background-color: #19B95F;
+        color: white;
+        font-size: 0.7500em;
+    }
+
+        .btn-success:hover {
+            background-color: #18AD5A;
+        }
+
+    .btn-primary {
+        width: 100px;
+        height: 35px;
+        font-size: 0.7500em;
+    }
+
+    .btn-danger {
+        width: 100px;
+        height: 35px;
+        font-size: 0.7500em;
+    }
+    
+
+    .alert-danger {
+        width: 500px;
+    }
+
+</style>
+
+
+<div id="main-remove-vehicle">
+    <div><h3 class="remove-title">Retirada de Veículo</h3></div>
+    
+    <EditForm id="form-remove-vehicle" Model="@_alocacao" OnValidSubmit="CheckoutVehicle">
+        <DataAnnotationsValidator />
+
+        <div class="form-group ">
+            <label class="label-input-text">Estacionamento *</label>
+            <div class="div-show-info">@_alocacao.EstacionamentoUnidade</div>
+        </div>
+
+        <div class="form-group ">
+            <label class="label-input-text">Vaga *</label>
+            <div class="div-show-info">@_alocacao.VagaNome</div>
+        </div>
+
+        <div class="form-group ">
+            <label class="label-input-text">Veículo *</label>
+            <div class="div-show-info">@_alocacao.VeiculoPlaca</div>
+        </div>
+
+        <div class="form-group">
+            <label class="label-input-text">Data/Hora de Entrada *</label>
+            <div class="div-show-info">@_alocacao.Entrada.ToString("dd/MM/yyyy hh:mm")</div>
+        </div>
+
+        <div class="form-group ">
+            <label class="label-input-text">Manobrista Entrada *</label>
+            <div class="div-show-info">[@_alocacao.ManobristaEntradaCPF] @_alocacao.ManobristaEntradaNome</div>
+        </div>
+
+        <div class="form-group ">
+            <label class="label-input-text">Atendente Entrada *</label>
+            <div class="div-show-info">[@_alocacao.AtendenteEntradaCPF] @_alocacao.AtendenteEntradaNome</div>
+        </div>
+
+        <div class="form-group ">
+            <label class="label-input-text">Manobrista Retirada *</label>
+            <div>
+                <InputSelectNumber class="form-control" @bind-Value="@_alocacao.ManobristaSaidaId" disabled="@_confirmacao">
+                    @if (ListagemManobristas == null)
+                    {
+                        <option value="0">-- Carregando --</option>
+                    }
+                    else
+                    {
+                        <option value="0">-- Escolha o Manobrista --</option>
+                        @if (ListagemManobristas != null)
+                        {
+                            @foreach (var funcionario in ListagemManobristas)
+                            {
+                                <option value="@funcionario.Id">@funcionario.Nome</option>
+                            }
+                        }
+                    }
+                </InputSelectNumber>
+            </div>
+        </div>
+
+        <div class="form-group ">
+            <label class="label-input-text">Atendente Retirada *</label>
+            <div>
+                <InputSelectNumber class="form-control" @bind-Value="@_alocacao.AtendenteSaidaId" disabled="@_confirmacao">
+                    @if (ListagemAtendentes == null)
+                    {
+                        <option value="0">-- Carregando --</option>
+                    }
+                    else
+                    {
+                        <option value="0">-- Escolha o Atendente --</option>
+                        @if (ListagemAtendentes != null)
+                        {
+                            @foreach (var funcionario in ListagemAtendentes)
+                            {
+                                <option value="@funcionario.Id">@funcionario.Nome</option>
+                            }
+                        }
+                    }
+                </InputSelectNumber>
+            </div>
+        </div>
+
+
+        @if (!_confirmacao)
+        {
+            <div class="cancel-calc-confirm-area">
+                <div>
+                    <a class="btn btn-danger" href="/">Cancelar</a>
+                </div>
+
+                <div>
+                    <button type="submit" class="btn btn-primary">Calcular</button>
+                </div>
+            </div>
+        }
+        else
+        {
+            <div class="cancel-calc-confirm-area">
+                <div>
+                    <button class="btn btn-danger" @onclick="@(() => CancelarConfirmacao())">Cancelar</button>
+                </div>
+                <div>
+                    <button type="submit" class="btn btn-success">Confirmar</button>
+                </div>
+            </div>
+
+            <br />
+            <hr />
+            <h5 class="remove-title">Confirme os Dados da Retirada</h5>
+            <div class="form-group">
+                <label class="label-input-text">Data/Hora de Saída *</label>
+                <div class="div-show-info">@_alocacao.Saida.Value.ToString("dd/MM/yyyy hh:mm")</div>
+            </div>
+
+            <div class="form-group">
+                <label class="label-input-text">Total de Horas Cobradas *</label>
+                <div class="div-show-info">@_horasCobradas</div>
+            </div>
+
+            <div class="form-group">
+                <label class="label-input-text">Total à Pagar *</label>
+                <div class="div-show-info">@_alocacao.ValorPago.ToString("C")</div>
+                @if (_alocacao.Mensalista)
+                {
+                    <small style="color: red;">Veículo Mensalista</small>
+                }
+            </div>
+
+            <div class="form-group">
+                <label class="label-input-text">Total Estimado de Carbono Economizado <br> no Período *</label>
+                <div class="div-show-info">@_alocacao.EconomiaCarbono.ToString("N2") Kg</div>
+            </div>
+        }
+
+        <br />
+        <br />
+        @if (!string.IsNullOrEmpty(_errorMessage))
+        {
+                <div class="alert alert-danger alert-dismissible">
+                    <button type="button" class="close" data-dismiss="alert" @onclick="@(() => _errorMessage = string.Empty)">×</button>
+                    <strong>Erro!</strong> @_errorMessage
+                </div>
+        }
+    </EditForm>
+
+</div>

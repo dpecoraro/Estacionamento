@@ -1,0 +1,41 @@
+﻿@page "/estacionamentos/edit/{estacionamentoId:int}"
+@using Microsoft.AspNetCore.Authorization
+@inject NavigationManager uriHelper
+@attribute [Authorize]
+
+<style>
+
+    .content {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    #estacionamento-title
+    {
+        text-align: center;
+        font-size: 1.3em;
+        padding-bottom: 5px;
+    }
+
+    #estacionamento-subtitle
+    {
+        text-align: center;
+        font-size: 0.90em;
+        font-weight: 500;
+        color: rgb(94, 94, 94);
+        padding-bottom: 15px;
+    }
+
+</style>
+
+
+<div id="main-estacionamento-create">
+    <div>
+        <h2 id="estacionamento-title">Editar Estacionamento</h2>
+        <p id="estacionamento-subtitle">Informe os dados abaixo para editar o estacionamento</p>
+    </div>
+    <div>
+        <FormEstacionamento estac="@estac" OnValidSubmit="@EditEstacionamento" ErrorMessage="@ErrorMessage" />
+    </div>
+</div>
